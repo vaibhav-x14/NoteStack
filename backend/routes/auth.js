@@ -5,32 +5,24 @@ const User = require("../models/User");
 
 const router = express.Router();
 
-/* ======================
-   REGISTER
-====================== */
+/* REGISTER */
 router.post("/register", async (req, res) => {
   try {
     let { name, email, password } = req.body;
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password)
       return res.status(400).json({ message: "All fields are required" });
-    }
 
     email = email.toLowerCase();
 
     const exists = await User.findOne({ email });
-    if (exists) {
+    if (exists)
       return res.status(400).json({ message: "Email already exists" });
-    }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashed = await bcrypt.hash(password, 10);
 
-    const user = await User.create({
-      name,
-      email,
-      password: hashedPassword,
-    });
-    
+    const user = await User.create({ name, email, password: hashed });
+
     const token = jwt.sign(
       { id: user._id },
       process.env.JWT_SECRET,
@@ -39,41 +31,29 @@ router.post("/register", async (req, res) => {
 
     res.status(201).json({
       token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-      },
+      user: { id: user._id, name, email },
     });
 
   } catch (err) {
-    console.error("REGISTER ERROR:", err);
+    console.error(err);
     res.status(500).json({ message: err.message });
   }
 });
 
-/* ======================
-   LOGIN
-====================== */
+/* LOGIN */
 router.post("/login", async (req, res) => {
   try {
     let { email, password } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-
     email = email.toLowerCase();
 
     const user = await User.findOne({ email });
-    if (!user) {
+    if (!user)
       return res.status(400).json({ message: "User not found" });
-    }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
+    const ok = await bcrypt.compare(password, user.password);
+    if (!ok)
       return res.status(400).json({ message: "Invalid password" });
-    }
 
     const token = jwt.sign(
       { id: user._id },
@@ -83,15 +63,10 @@ router.post("/login", async (req, res) => {
 
     res.json({
       token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-      },
+      user: { id: user._id, name: user.name, email },
     });
 
   } catch (err) {
-    console.error("LOGIN ERROR:", err);
     res.status(500).json({ message: err.message });
   }
 });
