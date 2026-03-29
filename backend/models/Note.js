@@ -7,27 +7,17 @@ const NoteSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-
     title: {
       type: String,
       required: true,
-      trim: true,
     },
-
-    content: {
-      type: String,
-      trim: true,
-    },
-
-    // ⭐ PIN FEATURE (YAHI ADD KIYA H)
+    content: String,
     pinned: {
       type: Boolean,
       default: false,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("Note", NoteSchema);
