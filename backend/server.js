@@ -11,7 +11,7 @@ const app = express();
 /* ======================
    MIDDLEWARE
 ====================== */
-app.use(cors({ origin: "*" })); // ✅ FIXED
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 /* ======================
@@ -34,7 +34,8 @@ mongoose.connect(process.env.MONGO_URI)
 /* ======================
    SERVER
 ====================== */
-const PORT = process.env.PORT || 5050;
-app.listen(PORT, () => {
+const PORT = process.env.PORT || 10000; // 🔥 IMPORTANT
+
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
 });
