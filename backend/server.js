@@ -11,14 +11,7 @@ const app = express();
 /* ======================
    MIDDLEWARE
 ====================== */
-app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://notestack-qs2ccvxt2-vaibhav-x14s-projects.vercel.app"
-  ],
-  credentials: true,
-}));
-
+app.use(cors({ origin: "*" })); // ✅ FIXED
 app.use(express.json());
 
 /* ======================
@@ -36,10 +29,12 @@ app.use("/api/notes", noteRoutes);
 ====================== */
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
-  .catch(err => console.log(err));
+  .catch(err => console.log("Mongo Error:", err));
 
 /* ======================
    SERVER
 ====================== */
 const PORT = process.env.PORT || 5050;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
