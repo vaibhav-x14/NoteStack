@@ -1,33 +1,16 @@
-const API_URL = "https://notestack-v7ns.onrender.com";
+import axios from "axios";
 
-export const registerUser = async (data) => {
-  const res = await fetch(`${API_URL}/api/auth/register`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
+const API = axios.create({
+  baseURL: "https://notestack-v7ns.onrender.com/api",
+});
 
-  const result = await res.json();
+// OPTIONAL: token automatically attach karega (pro feature)
+API.interceptors.request.use((req) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    req.headers.Authorization = `Bearer ${token}`;
+  }
+  return req;
+});
 
-  if (!res.ok) throw new Error(result.message);
-
-  return result;
-};
-
-export const loginUser = async (data) => {
-  const res = await fetch(`${API_URL}/api/auth/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
-
-  const result = await res.json();
-
-  if (!res.ok) throw new Error(result.message);
-
-  return result;
-};
+export default API;
