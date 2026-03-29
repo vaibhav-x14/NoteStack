@@ -4,7 +4,7 @@ const API = axios.create({
   baseURL: "https://notestack-v7ns.onrender.com/api",
 });
 
-// OPTIONAL: token automatically attach karega (pro feature)
+// token auto attach
 API.interceptors.request.use((req) => {
   const token = localStorage.getItem("token");
   if (token) {
