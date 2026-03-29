@@ -12,7 +12,10 @@ const app = express();
    MIDDLEWARE (ORDER IMPORTANT)
 ====================== */
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: [
+  "http://localhost:5173",
+  "https://notestack-qs2ccvxt2-vaibhav-x14s-projects.vercel.app"
+],
   credentials: true,
 }));
 
