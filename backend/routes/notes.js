@@ -4,37 +4,21 @@ const auth = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
-/* ======================
-   CREATE NOTE
-====================== */
 router.post("/", auth, async (req, res) => {
-  try {
-    const note = await Note.create({
-      user: req.userId,            // ✅ FIXED
-      title: req.body.title,
-      content: req.body.content,
-      pinned: req.body.pinned || false,
-    });
-
-    res.json(note);
-  } catch (err) {
-    console.error("CREATE ERROR:", err);
-    res.status(500).json({ message: "Create failed" });
-  }
+  const note = await Note.create({
+    user: req.userId,
+    title: req.body.title,
+    content: req.body.content,
+  });
+  res.json(note);
 });
 
-/* ======================
-   GET ALL NOTES
-====================== */
 router.get("/", auth, async (req, res) => {
-  try {
-    const notes = await Note.find({ user: req.userId }) // ✅ FIXED
-      .sort({ pinned: -1, createdAt: -1 });
+  const notes = await Note.find({ user: req.userId });
+  res.json(notes);
+});
 
-    res.json(notes);
-  } catch (err) {
-    console.error("FETCH ERROR:", err);
-    res.status(500).json({ message: "Fetch failed" });
+module.exports = router;    res.status(500).json({ message: "Fetch failed" });
   }
 });
 
