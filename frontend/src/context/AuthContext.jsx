@@ -11,28 +11,55 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     const savedUser = localStorage.getItem("user");
+
     if (token && savedUser) {
       setUser(JSON.parse(savedUser));
     }
+
     setLoading(false);
   }, []);
 
+  /* ======================
+     REGISTER
+  ====================== */
   const register = async (formData) => {
-    const res = await API.post("/auth/register", formData);
-    localStorage.setItem("token", res.data.token);
-    localStorage.setItem("user", JSON.stringify(res.data.user));
-    setUser(res.data.user);
-    return res.data;
+    try {
+      const res = await API.post("/auth/register", formData);
+
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      setUser(res.data.user);
+
+      return res.data;
+    } catch (err) {
+      console.error("REGISTER ERROR:", err);
+      throw new Error(err.response?.data?.message || "Registration failed");
+    }
   };
 
+  /* ======================
+     LOGIN
+  ====================== */
   const login = async (formData) => {
-    const res = await API.post("/auth/login", formData);
-    localStorage.setItem("token", res.data.token);
-    localStorage.setItem("user", JSON.stringify(res.data.user));
-    setUser(res.data.user);
-    return res.data;
+    try {
+      const res = await API.post("/auth/login", formData);
+
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      setUser(res.data.user);
+
+      return res.data;
+    } catch (err) {
+      console.error("LOGIN ERROR:", err);
+      throw new Error(err.response?.data?.message || "Login failed");
+    }
   };
 
+  /* ======================
+     LOGOUT
+  ====================== */
   const logout = () => {
     localStorage.clear();
     setUser(null);
@@ -40,7 +67,17 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, searchQuery, setSearchQuery }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        login,
+        register,
+        logout,
+        searchQuery,
+        setSearchQuery,
+      }}
+    >
       {!loading && children}
     </AuthContext.Provider>
   );
