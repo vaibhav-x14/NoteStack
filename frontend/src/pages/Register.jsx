@@ -15,9 +15,10 @@ const Register = () => {
     try {
       await register(form);
       navigate("/notes");
-    } catch {
-      setError("Registration failed. That email might already be in use.");
-    } finally {
+    } catch (err) {
+  console.log(err);
+  setError("Registration failed. Check console.");
+} finally {
       setLoading(false);
     }
   };
