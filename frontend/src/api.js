@@ -1,16 +1,33 @@
-import axios from "axios";
+const API_URL = "https://notestack-v7ns.onrender.com";
 
-const API = axios.create({
-  baseURL: "http://localhost:5050/api", // ✅ correct port
-});
+export const registerUser = async (data) => {
+  const res = await fetch(`${API_URL}/api/auth/register`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
 
-API.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token");
-    if (token) config.headers.Authorization = `Bearer ${token}`;
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+  const result = await res.json();
 
-export default API;
+  if (!res.ok) throw new Error(result.message);
+
+  return result;
+};
+
+export const loginUser = async (data) => {
+  const res = await fetch(`${API_URL}/api/auth/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  const result = await res.json();
+
+  if (!res.ok) throw new Error(result.message);
+
+  return result;
+};
